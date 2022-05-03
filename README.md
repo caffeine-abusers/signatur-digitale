@@ -1,8 +1,8 @@
-Návrh vlastní implementace digitálního podpisu
+# Návrh vlastní implementace digitálního podpisu
 
-Navrhni vlastní implementaci digitálního podpisu textových dokumentů s využitím hashovací funkce (např. MD5) a synchronního šifrování (dle vlastního výběru). Údaje o certifikátu a klíč pro šifrování a dešifrování budou evidovány v databázi. Součástí realizace budou tyto dílčí části:
+## Navrhni vlastní implementaci digitálního podpisu textových dokumentů s využitím hashovací funkce (např. MD5) a synchronního šifrování (dle vlastního výběru). Údaje o certifikátu a klíč pro šifrování a dešifrování budou evidovány v databázi. Součástí realizace budou tyto dílčí části:
 
-## 1. Návrh a realizace databáze certifikátů pro ověření věrohodnosti digitálního podpisu
+## Návrh a realizace databáze certifikátů pro ověření věrohodnosti digitálního podpisu
 
 - návrh – E-R diagram
 
