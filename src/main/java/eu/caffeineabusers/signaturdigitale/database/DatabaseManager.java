@@ -91,21 +91,23 @@ public class DatabaseManager {
      * Prepare all the tables in the database.
      */
     public void prepareTablesAsync() {
-        executeQueryAsync("CREATE TABLE IF NOT EXISTS `users` (" +
-                "`id` INT NOT NULL AUTO_INCREMENT," +
-                "`username` VARCHAR(255) NOT NULL," +
-                "`password` VARCHAR(255) NOT NULL," +
-                "`email` VARCHAR(255) NOT NULL," +
-                "`first_name` VARCHAR(255) NOT NULL," +
-                "`last_name` VARCHAR(255) NOT NULL," +
-                "`created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP," +
-                "`updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP," +
-                "PRIMARY KEY (`id`)," +
-                "UNIQUE INDEX `username_UNIQUE` (`username` ASC)," +
-                "UNIQUE INDEX `email_UNIQUE` (`email` ASC)" +
-                ") ENGINE=InnoDB DEFAULT CHARSET=utf8;"
+        executeQueryAsync(
+                "CREATE TABLE IF NOT EXISTS `subjects` (" +
+                        "`ìd` VARCHAR(36) NOT NULL," +
+                        "`name` VARCHAR(255) NOT NULL," +
+                        "`password` VARCHAR(255) NOT NULL," +
+                        "PRIMARY KEY (`id`));"
+        );
+        executeQueryAsync(
+                "CREATE TABLE IF NOT EXISTS `certificates` (" +
+                        "`id` VARCHAR(36) NOT NULL," +
+                        "`subject_id` VARCHAR(36) NOT NULL," +
+                        "`key` VARCHAR(255) NOT NULL," +
+                        "`expiry` LONG NOT NULL," +
+                        "PRIMARY KEY (`id`));"
         );
     }
+
 
 
 

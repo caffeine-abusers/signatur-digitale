@@ -12,6 +12,21 @@ import java.io.File;
  * with a private key and verify the signature with the public key. The
  * application is able to sign and verify files of any size.
  *
+ * <b>Signing:</b>
+ * <ul>
+ *     <li>Hash text file</li>
+ *     <li>Encrypt hash with key</li>
+ *     <li>Add the signature (certificateId, hash) into the file</li>
+ * </ul>
+ *
+ * <b>Verifying:</b>
+ * <ul>
+ *     <li>Read signature (certificateId, hash) from the file</li>
+ *     <li>Decrypt hash with key</li>
+ *     <li>Compare hash with the hash of the file</li>
+ *     <li>If the hashes are equal, the signature is valid</li>
+ * </ul>
+ *
  * @author Marek Charvát, Tomáš Plánský
  * @version 1.0.0
  */
