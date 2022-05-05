@@ -1,5 +1,8 @@
 package eu.caffeineabusers.signaturdigitale.certificate;
 
+import lombok.ToString;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.UUID;
 
 /**
@@ -8,8 +11,12 @@ import java.util.UUID;
  *
  * @author Tomáš Plánský
  */
-public record Certificate(UUID uid, String key, UUID subjectId, long expiry) {
-
-
+@ToString
+public record Certificate(
+        @NotNull UUID uid,
+        @NotNull String key,
+        @NotNull UUID subjectId,
+        long expiry
+) {
 
 }

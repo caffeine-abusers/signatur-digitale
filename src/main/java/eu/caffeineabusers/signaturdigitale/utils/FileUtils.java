@@ -1,4 +1,4 @@
-package eu.caffeineabusers.signaturdigitale.utils.file;
+package eu.caffeineabusers.signaturdigitale.utils;
 
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;

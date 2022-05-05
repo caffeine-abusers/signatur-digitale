@@ -8,7 +8,7 @@ public final class CipherUtils {
 
     public static String encipher(@NotNull String string, @NotNull String key) {
 
-        return null;
+        return string;
     }
 
 }
