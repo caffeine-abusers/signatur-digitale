@@ -1,6 +1,6 @@
 package eu.caffeineabusers.signaturdigitale;
 
-import eu.caffeineabusers.signaturdigitale.certificate.CertificateManager;
+import eu.caffeineabusers.signaturdigitale.certificate.CertificateRegistry;
 import eu.caffeineabusers.signaturdigitale.database.DatabaseManager;
 import lombok.Getter;
 
@@ -13,12 +13,12 @@ import lombok.Getter;
  * <ul>
  *     <li>Hash text file</li>
  *     <li>Encrypt hash with key</li>
- *     <li>Add the signature (certificateId, hash) into the file</li>
+ *     <li>Add the signature (certificate, hash) into the file</li>
  * </ul>
  *
  * <b>Verifying:</b>
  * <ul>
- *     <li>Read signature (certificateId, hash) from the file</li>
+ *     <li>Read signature (certificate, hash) from the file</li>
  *     <li>Decrypt hash with key</li>
  *     <li>Compare hash with the hash of the file</li>
  *     <li>If the hashes are equal, the signature is valid</li>
@@ -32,7 +32,7 @@ public final class SignaturDigitale {
 
     private static SignaturDigitale instance;
     private final DatabaseManager databaseManager;
-    private final CertificateManager certificateManager;
+    private final CertificateRegistry certificateRegistry;
 
     /**
      * Creates a new instance of {@link SignaturDigitale}. This constructor starts
@@ -41,7 +41,7 @@ public final class SignaturDigitale {
     public SignaturDigitale() {
         instance = this;
         databaseManager = new DatabaseManager();
-        certificateManager = new CertificateManager();
+        certificateRegistry = new CertificateRegistry();
     }
 
     /**

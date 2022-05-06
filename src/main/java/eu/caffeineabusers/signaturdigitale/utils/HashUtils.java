@@ -21,9 +21,10 @@ public final class HashUtils {
      *
      * @param string The string to hash.
      * @return The hashed string.
+     * @throws RuntimeException If anything goes wrong.
      */
     @Contract("_ -> new")
-    public static @NotNull String hash(@NotNull String string) {
+    public static @NotNull String hash(@NotNull String string) throws RuntimeException {
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("MD_5");
             byte[] hashBytes = messageDigest.digest(string.getBytes(StandardCharsets.UTF_8));

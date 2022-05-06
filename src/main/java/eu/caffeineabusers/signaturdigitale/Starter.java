@@ -1,9 +1,7 @@
 package eu.caffeineabusers.signaturdigitale;
 
 import eu.caffeineabusers.signaturdigitale.certificate.Certificate;
-
-import java.util.Optional;
-import java.util.UUID;
+import eu.caffeineabusers.signaturdigitale.signature.VerificationResult;
 
 /**
  * This class is responsible for starting the application.
@@ -13,30 +11,36 @@ import java.util.UUID;
 public final class Starter {
 
     public static void main(String[] args) {
+
+
         if (args.length != 3) {
-            System.out.println("Usage: java SignaturDigitale <sign|verify> <file> <certificateId>");
-            System.exit(1);
+            System.out.println("Usage: java SignaturDigitale <sign|verify> <file> <certificateName>");
+            return;
         }
 
         String action = args[0];
         String file = args[1];
-        String certificateId = args[2];
-        UUID certificateUid = UUID.fromString(certificateId);
+        String certificateName = args[2];
 
         SignaturDigitale signaturDigitale = new SignaturDigitale();
-        Optional<Certificate> certificate = signaturDigitale.getCertificateManager().getCertificate(certificateUid);
-        if (certificate.isEmpty()) {
+        Certificate certificate = signaturDigitale.getCertificateRegistry().get(certificateName);
+        if (certificate == null) {
             System.out.println("Invalid certificate.");
-            System.exit(1);
+            return;
         }
 
         if (action.equals("sign")) {
-            SignaturDigitaleAPI.sign(file, certificate.get());
+            SignaturDigitaleAPI.sign(file, certificate);
         } else if (action.equals("verify")) {
-            SignaturDigitaleAPI.verify(file, certificate.get());
+            VerificationResult result = SignaturDigitaleAPI.verify(file);
+            switch (result) {
+                case VALID -> System.out.println("Signature is valid.");
+                case INVALID -> System.out.println("Signature is invalid.");
+                case EXPIRED -> System.out.println("Certificate expired.");
+                case NOT_SIGNED -> System.out.println("File is not signed.");
+            }
         } else {
-            System.out.println("Usage: java SignaturDigitale <sign|verify> <file> <certificateId>");
-            System.exit(1);
+            System.out.println("Usage: java SignaturDigitale <sign|verify> <file> <certificateName>");
         }
     }
 

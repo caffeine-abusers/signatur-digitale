@@ -3,8 +3,6 @@ package eu.caffeineabusers.signaturdigitale.certificate;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.UUID;
-
 /**
  * This class represents a certificate. It stores some information about the certificate
  * and is able to verify a signature.
@@ -13,10 +11,19 @@ import java.util.UUID;
  */
 @ToString
 public record Certificate(
-        @NotNull UUID uid,
+        @NotNull String name,
+        @NotNull String subjectName,
         @NotNull String key,
-        @NotNull UUID subjectId,
         long expiry
 ) {
+
+    /**
+     * Checks if the certificate is expired.
+     *
+     * @return True if the certificate is expired, false otherwise.
+     */
+    public boolean isExpired() {
+        return expiry < System.currentTimeMillis();
+    }
 
 }

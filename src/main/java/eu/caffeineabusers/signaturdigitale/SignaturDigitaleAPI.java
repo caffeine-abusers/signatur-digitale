@@ -2,6 +2,7 @@ package eu.caffeineabusers.signaturdigitale;
 
 import eu.caffeineabusers.signaturdigitale.certificate.Certificate;
 import eu.caffeineabusers.signaturdigitale.signature.Signature;
+import eu.caffeineabusers.signaturdigitale.signature.VerificationResult;
 import eu.caffeineabusers.signaturdigitale.utils.CipherUtils;
 import eu.caffeineabusers.signaturdigitale.utils.FileUtils;
 import eu.caffeineabusers.signaturdigitale.utils.HashUtils;
@@ -23,8 +24,7 @@ import java.util.regex.Pattern;
 @UtilityClass
 public final class SignaturDigitaleAPI {
 
-    // {SIGNATURE:ID:HASH}
-    private static final Pattern SIGNATURE_PATTERN = Pattern.compile("\\{SIGNATURE:([1]):([a-zA-Z\\d]+)}");
+    private static final Pattern SIGNATURE_PATTERN = Pattern.compile("Signature\\{certificate=(\\W+),hash=([a-zA-Z\\d]+)}");
 
     /**
      * Signs the file with the given {@link Certificate}.
@@ -47,9 +47,14 @@ public final class SignaturDigitaleAPI {
      * @param certificate The certificate.
      */
     public static void sign(@NotNull File file, @NotNull Certificate certificate) throws Exception {
-        String encipheredContentHash = getEncipheredFileContentHash(file, certificate);
+        // Get the content of the file as a String.
+        String content = FileUtils.readFile(file);
+        // Hash the content.
+        String contentHash = HashUtils.hash(content);
+        // Encipher the content hash with the key from the certificate.
+        String encipheredContentHash = CipherUtils.encipher(contentHash, certificate.key());
         // Create the signature.
-        Signature signature = new Signature(certificate.subjectId().toString(), encipheredContentHash);
+        Signature signature = new Signature(certificate.name(), encipheredContentHash);
         // Put the signature into the file.
         try(FileWriter fileWriter = new FileWriter(file)) {
             fileWriter.append(signature.toString());
@@ -61,15 +66,14 @@ public final class SignaturDigitaleAPI {
      * Verifies the signature of the file with the given {@link Certificate}.
      *
      * @param file The file to verify.
-     * @param certificate The certificate.
      * @return True if the file is signed and the signature is valid, false otherwise.
      */
-    public static boolean verify(@NotNull String file, @NotNull Certificate certificate) {
+    public static VerificationResult verify(@NotNull String file) {
         try {
-            return verify(new File(file), certificate);
+            return verify(new File(file));
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
-            return false;
+            return VerificationResult.INVALID;
         }
     }
 
@@ -77,36 +81,26 @@ public final class SignaturDigitaleAPI {
      * Verifies the signature of the file with the given {@link Certificate}.
      *
      * @param file The file to verify.
-     * @param certificate The certificate.
      * @return True if the file is signed and the signature is valid, false otherwise.
      */
-    public static boolean verify(@NotNull File file, @NotNull Certificate certificate) throws Exception {
+    public static VerificationResult verify(@NotNull File file) throws Exception {
         String content = FileUtils.readFile(file);
+        // Find the signature.
         Signature signature = findSignature(content);
         if (signature == null) {
-            return false;
+            return VerificationResult.NOT_SIGNED;
+        } else if (signature.getCertificate().isExpired()) {
+            return VerificationResult.EXPIRED;
         }
-        String encipheredContentHash = getEncipheredFileContentHash(file, certificate);
-
-        return true;
-    }
-
-    /**
-     * Utility method that gets the content of a file, hashes it and enciphers it with the key
-     * from the given {@link Certificate}. The enciphered hash is returned.
-     *
-     * @param file The file.
-     * @param certificate The certificate.
-     * @return The enciphered hash.
-     * @throws Exception If the file content couldn't be read.
-     */
-    private static String getEncipheredFileContentHash(@NotNull File file, @NotNull Certificate certificate) throws Exception {
-        // Get the content of the file as a String.
-        String content = FileUtils.readFile(file);
-        // Hash the content.
+        Certificate certificate = signature.getCertificate();
+        // Hide the signature from the content.
+        content = content.replace(signature.toString(), "");
+        // Hash the current content.
         String contentHash = HashUtils.hash(content);
-        // Encipher the content hash with the key from the certificate.
-        return CipherUtils.encipher(contentHash, certificate.key());
+        // Decipher the hash from the signature.
+        String decipheredContentHash = CipherUtils.decipher(signature.hash(), certificate.key());
+        // Check the equality.
+        return decipheredContentHash.equals(contentHash) ? VerificationResult.VALID : VerificationResult.INVALID;
     }
 
     /**
@@ -120,9 +114,9 @@ public final class SignaturDigitaleAPI {
     public static Signature findSignature(@NotNull String fileContent) {
         Matcher matcher = SIGNATURE_PATTERN.matcher(fileContent);
         if (matcher.find()) {
-            String id = matcher.group(1);
+            String certificateName = matcher.group(1);
             String hash = matcher.group(2);
-            return new Signature(id, hash);
+            return new Signature(certificateName, hash);
         }
         return null;
     }

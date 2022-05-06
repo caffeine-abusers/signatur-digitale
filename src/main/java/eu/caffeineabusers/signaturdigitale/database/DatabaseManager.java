@@ -56,7 +56,7 @@ public class DatabaseManager {
      *
      * @param query The query to execute.
      */
-    public void executeQueryAsync(@NotNull String query) {
+    public void executeAsync(@NotNull String query) {
         CompletableFuture.runAsync(() -> {
             try (Connection connection = mySQL.getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement(query)
@@ -69,12 +69,12 @@ public class DatabaseManager {
     }
 
     /**
-     * Execute a select query asynchronously. The result of the query is passed to the given consumer.
+     * Execute a query asynchronously. The result of the query is passed to the given consumer.
      *
      * @param query The query to execute.
      * @param callback The callback to execute when the query is finished.
      */
-    public void executeSelectAsync(@NotNull String query, @NotNull Consumer<ResultSet> callback) {
+    public void executeQueryAsync(@NotNull String query, @NotNull Consumer<ResultSet> callback) {
         CompletableFuture.runAsync(() -> {
             try (Connection connection = mySQL.getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement(query)
@@ -91,14 +91,7 @@ public class DatabaseManager {
      * Prepare all the tables in the database.
      */
     public void prepareTablesAsync() {
-        executeQueryAsync(
-                "CREATE TABLE IF NOT EXISTS `subjects` (" +
-                        "`ìd` VARCHAR(36) NOT NULL," +
-                        "`name` VARCHAR(255) NOT NULL," +
-                        "`password` VARCHAR(255) NOT NULL," +
-                        "PRIMARY KEY (`id`));"
-        );
-        executeQueryAsync(
+        executeAsync(
                 "CREATE TABLE IF NOT EXISTS `certificates` (" +
                         "`id` VARCHAR(36) NOT NULL," +
                         "`subject_id` VARCHAR(36) NOT NULL," +
