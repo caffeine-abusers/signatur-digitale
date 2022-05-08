@@ -6,7 +6,7 @@ import eu.caffeineabusers.signaturdigitale.signature.VerificationResult;
 /**
  * This class is responsible for starting the application.
  *
- * @author Tomáš Plánský
+ * @author Tomáš Plánský, Marek Charvát
  */
 public final class Starter {
 

@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
  * This class represents a certificate. It stores some information about the certificate
  * and is able to verify a signature.
  *
- * @author Tomáš Plánský
+ * @author Tomáš Plánský, Marek Charvát
  */
 @ToString
 public record Certificate(

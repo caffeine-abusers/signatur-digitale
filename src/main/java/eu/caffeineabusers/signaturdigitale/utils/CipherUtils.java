@@ -8,6 +8,14 @@ import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
+/**
+ * Utility class for ciphering and deciphering
+ *
+ * @author Marek Charvát, Tomáš Plánský
+ *
+ */
+
+
 @UtilityClass
 public final class CipherUtils {
 

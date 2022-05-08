@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
  * This registry stores and handles all certificates. It is used to create/get/remove
  * certificates.
  *
- * @author Tomáš Plánský
+ * @author Tomáš Plánský, Marek Charvát
  */
 public class CertificateRegistry extends Registry<String, Certificate> {
 

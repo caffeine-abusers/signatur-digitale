@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
  * This class represents the custom API used by the {@link SignaturDigitale} application
  * to sign and verify files.
  *
- * @author Tomáš Plánský
+ * @author Tomáš Plánský, Marek Charvát
  */
 @UtilityClass
 public final class SignaturDigitaleAPI {

@@ -9,7 +9,7 @@ import java.io.FileReader;
 /**
  * Utility class for file operations.
  *
- * @author Tomáš Plánský
+ * @author Tomáš Plánský, Marek Charvát
  */
 @UtilityClass
 public final class FileUtils {
