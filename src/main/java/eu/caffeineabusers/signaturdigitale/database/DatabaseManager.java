@@ -1,11 +1,13 @@
 package eu.caffeineabusers.signaturdigitale.database;
 
+import eu.caffeineabusers.signaturdigitale.certificate.Certificate;
 import eu.caffeineabusers.signaturdigitale.database.impl.MySQL;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
@@ -101,7 +103,43 @@ public class DatabaseManager {
         );
     }
 
+    /**
+     * Loads all certificates from the database and executes the given Callback.
+     *
+     * @param callback The action to execute when the ResultSet is ready.
+     */
+    public void loadCertificates(@NotNull Consumer<ResultSet> callback) {
+        executeQueryAsync("SELECT * FROM `certificates`", callback);
+    }
 
+    /**
+     * Save the given {@link Certificate} into the database. If a certificate with the same
+     * id is already present in the database, its values will be updated.
+     *
+     * @param certificate The certificate.
+     */
+    public void saveCertificate(@NotNull Certificate certificate) {
+        CompletableFuture.runAsync(() -> {
+            try (Connection connection = getMySQL().getConnection();
+                 PreparedStatement statement = connection.prepareStatement(
+                         "INSERT INTO `certificates`(`id`, `subject_id`, `key`, `expiry`) VALUES (?,?,?,?)" +
+                                 "ON DUPLICATE KEY UPDATE `id`=?, `subject_id`=?, `key`=?, `expiry`=?"
+                 )
+            ) {
+                statement.setString(1, certificate.name());
+                statement.setString(2, certificate.subjectName());
+                statement.setString(3, certificate.key());
+                statement.setLong(4, certificate.expiry());
+                statement.setString(5, certificate.name());
+                statement.setString(6, certificate.subjectName());
+                statement.setString(7, certificate.key());
+                statement.setLong(8, certificate.expiry());
+                statement.execute();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+    }
 
 
 
