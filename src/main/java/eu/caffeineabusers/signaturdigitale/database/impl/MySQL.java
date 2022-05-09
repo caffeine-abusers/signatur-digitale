@@ -10,7 +10,7 @@ import java.sql.SQLException;
 /**
  * This class is a wrapper for the HikariCP library. It provides a connection pool for the database.
  *
- * @author Tomáš Plánský
+ * @author Tomáš Plánský, Marek Charvát
  */
 public class MySQL {
 

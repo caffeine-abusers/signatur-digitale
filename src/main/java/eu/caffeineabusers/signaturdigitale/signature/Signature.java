@@ -11,7 +11,7 @@ import java.util.UUID;
  * This class represents a signature of a file. It contains information
  * about the signature including  of the certificate and the encrypted hash.
  *
- * @author Tomáš Plánský (tomas-plansky)
+ * @author Tomáš Plánský, Marek Charvát
  */
 @ToString
 public record Signature(

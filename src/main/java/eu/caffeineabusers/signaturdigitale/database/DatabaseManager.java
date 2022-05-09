@@ -15,7 +15,7 @@ import java.util.function.Consumer;
  * This manager is responsible for creating and managing the database connection. It is also responsible for
  * executing queries. The manager is thread-safe.
  *
- * @author Tomáš Plánský
+ * @author Tomáš Plánský, Marek Charvát
  */
 public class DatabaseManager {
 

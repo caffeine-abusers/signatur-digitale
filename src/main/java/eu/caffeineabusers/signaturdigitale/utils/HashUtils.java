@@ -11,7 +11,7 @@ import java.security.NoSuchAlgorithmException;
 /**
  * Utility class with some methods related to hashing.
  *
- * @author Tomáš Plánský
+ * @author Tomáš Plánský, Marek Charvát
  */
 @UtilityClass
 public final class HashUtils {
